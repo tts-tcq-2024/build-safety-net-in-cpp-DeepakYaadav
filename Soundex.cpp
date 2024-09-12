@@ -22,15 +22,15 @@ std::string generateSoundex(const std::string& name) {
 
     for (size_t i = 1; i < name.length() && soundex.length() < 4; ++i) {
         char code = getSoundexCode(name[i]);
+        // Combine the two conditions into one, reducing a decision point
         if (code != '0' && code != prevCode) {
             soundex += code;
-            prevCode = code;
         }
+        prevCode = code;  // Always update prevCode, even if the code wasn't added
     }
 
-    while (soundex.length() < 4) {
-        soundex += '0';
-    }
+    // Use string append to fill remaining positions, eliminating while loop
+    soundex.append(4 - soundex.length(), '0');
 
     return soundex;
 }
