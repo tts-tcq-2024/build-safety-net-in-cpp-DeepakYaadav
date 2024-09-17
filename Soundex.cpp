@@ -18,9 +18,14 @@ char getSoundexCode(char c) {
     return (it != soundexMap.end()) ? it->second : '\0';
 }
 
-// Appends a code to the Soundex string if it's unique and not a repeat
-void appendIfUnique(std::string& soundex, char code, char& lastCode) {
-    if (code != '\0' && code != lastCode && soundex.length() < 4) {
+// Checks if the Soundex code should be appended
+bool shouldAppend(char code, char lastCode) {
+    return (code != '\0' && code != lastCode);
+}
+
+// Appends the Soundex code to the string and updates lastCode
+void appendCode(std::string& soundex, char code, char& lastCode) {
+    if (soundex.length() < 4) {
         soundex.push_back(code);
         lastCode = code;
     }
@@ -40,7 +45,9 @@ std::string buildSoundex(const std::string& name) {
 
     for (size_t i = 1; i < name.length(); ++i) {
         char code = getSoundexCode(name[i]);
-        appendIfUnique(soundex, code, lastCode);
+        if (shouldAppend(code, lastCode)) {
+            appendCode(soundex, code, lastCode);
+        }
     }
 
     return padWithZeros(soundex);
