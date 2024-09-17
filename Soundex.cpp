@@ -31,16 +31,23 @@ std::string padWithZeros(const std::string& soundex) {
 std::string buildSoundex(const std::string& name) {
     if (name.empty()) return "";
 
-    std::string soundex(1, std::toupper(name[0]));  // Start with the first letter
-    char lastCode = getSoundexCode(name[0]);
+    std::string soundex(1, toupper(name[0]));
+    char prevCode = mapToSoundexCode(name[0]);
 
-    for (size_t i = 1; i < name.length() && soundex.size() < 4; ++i) {
-        char currentCode = getSoundexCode(name[i]);
-        appendIfUnique(soundex, currentCode, lastCode);
+    auto appendSoundexIfNeeded = [&](char code) {
+        if (soundex.length() < 4 && code != '0' && code != prevCode) {
+            soundex += code;
+            prevCode = code;
+        }
+    };
+
+    for (size_t i = 1; i < name.length(); ++i) {
+        appendSoundexIfNeeded(mapToSoundexCode(name[i]));
     }
 
-    return padWithZeros(soundex);
+    return paddingSoundex(soundex);
 }
+
 
 std::string generateSoundex(const std::string& name) {
     return buildSoundex(name);
