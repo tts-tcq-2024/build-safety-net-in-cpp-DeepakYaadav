@@ -20,7 +20,7 @@ char getSoundexCode(char c) {
 
 // Appends a code to the Soundex string if it's unique and not a repeat
 void appendIfUnique(std::string& soundex, char code, char& lastCode) {
-    if (code != '\0' && code != lastCode) {
+    if (code != '\0' && code != lastCode && soundex.length() < 4) {
         soundex.push_back(code);
         lastCode = code;
     }
@@ -38,7 +38,7 @@ std::string buildSoundex(const std::string& name) {
     std::string soundex(1, std::toupper(name[0]));
     char lastCode = getSoundexCode(name[0]);
 
-    for (size_t i = 1; i < name.length() && soundex.length() < 4; ++i) {
+    for (size_t i = 1; i < name.length(); ++i) {
         char code = getSoundexCode(name[i]);
         appendIfUnique(soundex, code, lastCode);
     }
@@ -51,3 +51,9 @@ std::string generateSoundex(const std::string& name) {
     return buildSoundex(name);
 }
 
+int main() {
+    std::string name = "Robert";
+    std::string soundexCode = generateSoundex(name);
+    std::cout << "Soundex code for " << name << " is " << soundexCode << std::endl;
+    return 0;
+}
