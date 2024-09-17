@@ -32,24 +32,24 @@ std::string buildSoundex(const std::string& name) {
     if (name.empty()) return "";
 
     std::string soundex(1, toupper(name[0]));
-    char prevCode = mapToSoundexCode(name[0]);
-
-    auto appendSoundexIfNeeded = [&](char code) {
-        if (soundex.length() < 4 && code != '0' && code != prevCode) {
-            soundex += code;
-            prevCode = code;
-        }
-    };
+    char prevCode = getSoundexCode(name[0]);
 
     for (size_t i = 1; i < name.length(); ++i) {
-        appendSoundexIfNeeded(mapToSoundexCode(name[i]));
+        char currentCode = getSoundexCode(name[i]);
+        appendIfUnique(soundex, currentCode, prevCode);
+        if (soundex.size() == 4) break;  // Ensure max length of 4
     }
 
-    return paddingSoundex(soundex);
+    return padWithZeros(soundex);
 }
-
 
 std::string generateSoundex(const std::string& name) {
     return buildSoundex(name);
 }
 
+int main() {
+    std::string name = "Robert";
+    std::string soundexCode = generateSoundex(name);
+    std::cout << "Soundex code for " << name << " is " << soundexCode << std::endl;
+    return 0;
+}
