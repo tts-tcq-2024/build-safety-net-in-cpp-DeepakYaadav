@@ -3,6 +3,7 @@
 #include <string>
 #include <cctype>
 
+// Get the Soundex code for a given character
 char getSoundexCode(char c) {
     static const std::unordered_map<char, char> soundexMap = {
         {'B', '1'}, {'F', '1'}, {'P', '1'}, {'V', '1'},
@@ -17,6 +18,7 @@ char getSoundexCode(char c) {
     return (it != soundexMap.end()) ? it->second : '\0';
 }
 
+// Appends the code to the Soundex string if it's unique and not a repeat
 void appendIfUnique(std::string& soundex, char code, char& lastCode) {
     if (code != '\0' && code != lastCode) {
         soundex.push_back(code);
@@ -24,26 +26,33 @@ void appendIfUnique(std::string& soundex, char code, char& lastCode) {
     }
 }
 
+// Pads the Soundex code with zeros to ensure a length of 4
 std::string padWithZeros(const std::string& soundex) {
     return soundex + std::string(4 - soundex.size(), '0');
 }
 
+// Simplified function to handle the Soundex building process
 std::string buildSoundex(const std::string& name) {
     if (name.empty()) return "";
 
-    std::string soundex(1, toupper(name[0]));
+    std::string soundex(1, std::toupper(name[0]));
     char prevCode = getSoundexCode(name[0]);
 
-    for (size_t i = 1; i < name.length(); ++i) {
-        char currentCode = getSoundexCode(name[i]);
+    // Helper lambda to process each character in the name
+    auto processCharacter = [&](char ch) {
+        char currentCode = getSoundexCode(ch);
         appendIfUnique(soundex, currentCode, prevCode);
-        if (soundex.size() == 4) break;  // Ensure max length of 4
+    };
+
+    // Iterate through the name starting from the second character
+    for (size_t i = 1; i < name.length() && soundex.length() < 4; ++i) {
+        processCharacter(name[i]);
     }
 
     return padWithZeros(soundex);
 }
 
+// Generates the Soundex code for the given name
 std::string generateSoundex(const std::string& name) {
     return buildSoundex(name);
 }
-
