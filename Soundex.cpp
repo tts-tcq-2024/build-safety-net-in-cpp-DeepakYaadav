@@ -50,11 +50,3 @@ std::string buildSoundex(const std::string& name) {
 std::string generateSoundex(const std::string& name) {
     return buildSoundex(name);
 }
-
-// Example usage
-int main() {
-    std::string name = "Smith";
-    std::string soundexCode = generateSoundex(name);
-    std::cout << "Soundex code for " << name << ": " << soundexCode << std::endl;
-    return 0;
-}
