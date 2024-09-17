@@ -38,9 +38,9 @@ std::string buildSoundex(const std::string& name) {
     std::string soundex(1, std::toupper(name[0]));
     char prevCode = getSoundexCode(name[0]);
 
-    for (size_t i = 1; i < name.length() && soundex.length() < 4; ++i) {
+    for (size_t i = 1; i < name.length(); ++i) {
         char code = getSoundexCode(name[i]);
-        if (code != '\0' && code != prevCode) {
+        if (code != '\0' && code != prevCode && soundex.length() < 4) {
             soundex.push_back(code);
             prevCode = code;
         }
