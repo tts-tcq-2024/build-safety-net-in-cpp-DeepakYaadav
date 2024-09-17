@@ -33,20 +33,15 @@ std::string padWithZeros(const std::string& soundex) {
 
 // Builds the Soundex code for a given name.
 std::string buildSoundex(const std::string& name) {
-    if (name.empty()) return "";
+    std::string soundex(1, toupper(name[0]));
+    char prevCode = mapToSoundexCode(name[0]);
 
-    std::string soundex(1, std::toupper(name[0]));
-    char prevCode = getSoundexCode(name[0]);
-
-    for (size_t i = 1; i < name.length(); ++i) {
-        char code = getSoundexCode(name[i]);
-        if (code != '\0' && code != prevCode && soundex.length() < 4) {
-            soundex.push_back(code);
-            prevCode = code;
-        }
+    for (size_t i = 1; i < name.length() && soundex.length() < 4; ++i) {
+        char code = mapToSoundexCode(name[i]);
+        appendSoundex(soundex, code, prevCode);
     }
 
-    return padWithZeros(soundex);
+    return paddingSoundex(soundex);
 }
 
 // Generates the Soundex code for a given name.
