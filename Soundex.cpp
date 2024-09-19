@@ -1,9 +1,7 @@
-#include <iostream>
-#include <unordered_map>
 #include <string>
 #include <cctype>
+#include <unordered_map>
 
-// Function to map characters to Soundex codes
 char mapToSoundexCode(char c) {
     static const std::unordered_map<char, char> soundexMap = {
         {'B', '1'}, {'F', '1'}, {'P', '1'}, {'V', '1'},
@@ -12,29 +10,27 @@ char mapToSoundexCode(char c) {
         {'D', '3'}, {'T', '3'}, {'L', '4'}, {'M', '5'}, 
         {'N', '5'}, {'R', '6'}
     };
-
-    c = std::toupper(c);
+    
+    c = toupper(c);
     auto it = soundexMap.find(c);
-    return (it != soundexMap.end()) ? it->second : '\0';
+    return (it != soundexMap.end()) ? it->second : '0';
 }
 
-// Function to append a Soundex code if it's unique and not '0'
 void appendSoundex(std::string& soundex, char code, char& prevCode) {
-    if (code != '\0' && code != '0' && code != prevCode) {
-        soundex.push_back(code);
+    if (code != '0' && code != prevCode) {
+        soundex += code;
         prevCode = code;
     }
+    
 }
 
-// Function to pad the Soundex code to a length of 4
 std::string paddingSoundex(const std::string& soundex) {
-    return soundex + std::string(4 - soundex.size(), '0');
+    std::string paddedSoundex = soundex;
+    paddedSoundex.resize(4, '0');
+    return paddedSoundex;
 }
 
-// Function to build the Soundex code from a name
 std::string buildSoundex(const std::string& name) {
-    if (name.empty()) return "";
-
     std::string soundex(1, toupper(name[0]));
     char prevCode = mapToSoundexCode(name[0]);
 
@@ -46,7 +42,7 @@ std::string buildSoundex(const std::string& name) {
     return paddingSoundex(soundex);
 }
 
-// Function to generate the Soundex code
 std::string generateSoundex(const std::string& name) {
+    if (name.empty()) return "";  // Handle empty input
     return buildSoundex(name);
 }
